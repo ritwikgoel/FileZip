@@ -2,7 +2,7 @@ package com.agoda.app;
 
 import java.io.IOException;
 
-import com.agoda.compress.ZipCompression;
+import com.agoda.compress.zip.ZipCompression;
 import com.agoda.constants.Commands;
 import com.agoda.constants.Compression;
 import com.agoda.exceptions.InvalidCommandException;
@@ -19,7 +19,7 @@ public class App {
 			}
 			String inputDir = args[1];
 			String outputDir = args[2];
-			Integer fileSize = Integer.parseInt(args[3]);
+			Long fileSize = Long.parseLong(args[3]);
 			// Currently using only ZIP compression
 			Compression compressionAlgorithm = Compression.ZIP;
 			switch (compressionAlgorithm) {
@@ -52,5 +52,7 @@ public class App {
 		} else {
 			throw new InvalidCommandException("This command is not supported");
 		}
+
+		System.out.println(Runtime.getRuntime().maxMemory() / 1000000);
 	}
 }
