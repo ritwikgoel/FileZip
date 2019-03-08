@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -19,25 +22,35 @@ public class ZipCompression implements Compressable {
 
 	private CountingOutputStream outStream;
 
-	private long maxAllowedBytes = Long.MAX_VALUE;
-
 	@Override
 	public void compress(String inputDir, String outputDir, long maxFileSize) throws IOException {
 		List<File> files = FileUtils.getFilesFromDirectory(inputDir);
-		this.maxAllowedBytes = FileUtils.MBtobytes(maxFileSize);
+		FileOutputStream fos = new FileOutputStream(outputDir+getPartFileName());
+		this.outStream = new CountingOutputStream(fos);
+		ZipOutputStream zipOut = new ZipOutputStream(this.outStream);
 		for (File file : files) {
-			if (file.length() >= maxFileSize) {
-				// read part file
-			} else {
-
-			}
+				FileInputStream fis = new FileInputStream(file);
+				zipOut.putNextEntry(new ZipEntry(FileUtils.getRelativePath(inputDir,file.getPath())));
+				
+				byte[] bytes = new byte[1024];
+	            int bytesRead;
+	            while((bytesRead = fis.read(bytes)) >= 0) {
+	            	if(getAvailableBytesInStream(maxFileSize)> bytesRead){
+	            		zipOut.write(bytes, 0, bytesRead);
+	            	} else {
+	            		fos = new FileOutputStream(outputDir+getPartFileName());
+	            		this.outStream = new CountingOutputStream(fos);
+	            		this.outStream.resetByteCount();
+	            		zipOut = new ZipOutputStream(this.outStream);
+	            		zipOut.write(bytes, 0, bytesRead);
+	            	}
+	                
+	            }
+	            fis.close();
+				
 		}
-		FileOutputStream fos = new FileOutputStream(getPartFileName());
-		ZipOutputStream zipOut = new ZipOutputStream(fos);
-		File fileToZip = new File(inputDir);
-
-		compressFile(fileToZip, fileToZip.getName(), zipOut);
 		zipOut.close();
+		this.outStream.close();
 		fos.close();
 	}
 
@@ -46,39 +59,12 @@ public class ZipCompression implements Compressable {
 
 	}
 
-	private void compressFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
-		// Don't compress invalid files
-		if (fileToZip == null || fileToZip.isHidden() || !fileToZip.canRead()) {
-			return;
-		}
-
-		if (fileToZip.isDirectory()) {
-			if (fileName.endsWith("/")) {
-				zipOut.putNextEntry(new ZipEntry(fileName));
-				zipOut.closeEntry();
-			} else {
-				zipOut.putNextEntry(new ZipEntry(fileName + "/"));
-				zipOut.closeEntry();
-			}
-			// Recursively compress all files in the subtree
-			File[] children = fileToZip.listFiles();
-			for (File childFile : children) {
-				compressFile(childFile, fileName + "/" + childFile.getName(), zipOut);
-			}
-			return;
-		}
-		FileInputStream fis = new FileInputStream(fileToZip);
-		ZipEntry zipEntry = new ZipEntry(fileName);
-		zipOut.putNextEntry(zipEntry);
-		byte[] bytes = new byte[1024];
-		int length;
-		while ((length = fis.read(bytes)) >= 0) {
-			zipOut.write(bytes, 0, length);
-		}
-		fis.close();
-	}
 
 	private String getPartFileName() {
-		return "compressed-part" + String.valueOf(this.partFileNo++) + ".zip";
+		return "compressed-part-" + String.valueOf(this.partFileNo++) + ".zip";
+	}
+	
+	private long getAvailableBytesInStream(long maxFileSizeBytes){
+		return maxFileSizeBytes - this.outStream.getByteCount();
 	}
 }

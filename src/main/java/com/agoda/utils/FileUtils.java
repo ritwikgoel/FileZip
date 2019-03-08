@@ -29,4 +29,12 @@ public class FileUtils {
 	public static long MBtobytes(long MB) {
 		return MB * MEGABYTE;
 	}
+	
+	public static String getRelativePath(String basePath ,String absolutePath){
+		if(absolutePath.startsWith(basePath)){
+			return absolutePath.substring(basePath.length());
+		}
+		return absolutePath;
+		
+	}
 }

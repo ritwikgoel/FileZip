@@ -6,6 +6,7 @@ import com.agoda.compress.zip.ZipCompression;
 import com.agoda.constants.Commands;
 import com.agoda.constants.Compression;
 import com.agoda.exceptions.InvalidCommandException;
+import com.agoda.utils.FileUtils;
 
 public class App {
 	public static void main(String[] args) throws IOException {
@@ -19,7 +20,8 @@ public class App {
 			}
 			String inputDir = args[1];
 			String outputDir = args[2];
-			Long fileSize = Long.parseLong(args[3]);
+			long fileSize = FileUtils.MBtobytes(Long.parseLong(args[3]));
+			
 			// Currently using only ZIP compression
 			Compression compressionAlgorithm = Compression.ZIP;
 			switch (compressionAlgorithm) {

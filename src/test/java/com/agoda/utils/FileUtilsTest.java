@@ -16,7 +16,7 @@ public class FileUtilsTest {
 
 	@Test
 	public void testGetFilesFromDirectory() {
-		String directory = "/home/siddhanjay/eclipse-workspace/FileZip/file-zip/src/test/resources/testData";
+		String directory = "~/FileZip/src/test/resources/testData";
 		List<String> files = FileUtils.getFilesFromDirectory(directory).stream().map(file -> file.getName())
 				.collect(Collectors.toList());
 		Collections.sort(files);
