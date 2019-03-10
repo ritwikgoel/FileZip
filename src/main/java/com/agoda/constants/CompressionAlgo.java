@@ -1,6 +1,6 @@
 package com.agoda.constants;
 
-public enum Compression {
+public enum CompressionAlgo {
 
 	ZIP
 }

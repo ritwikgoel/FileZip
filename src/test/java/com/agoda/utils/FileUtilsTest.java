@@ -17,7 +17,7 @@ public class FileUtilsTest {
 	@Test
 	public void testGetFilesFromDirectory() {
 		String directory = "~/FileZip/src/test/resources/testData";
-		List<String> files = FileUtils.getFilesFromDirectory(directory).stream().map(file -> file.getName())
+		List<String> files = FileUtils.getAllFiles(directory).stream().map(file -> file.getName())
 				.collect(Collectors.toList());
 		Collections.sort(files);
 		assertEquals(files, actualFiles);
