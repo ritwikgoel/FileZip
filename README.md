@@ -65,4 +65,4 @@ Decompressed 13 zip files to 65.6 MB of data containing 17 files in 0.5s <br>
 
 Compressed 6.7GB containing 1889 files with maxSplitSize of 100MB in 324s <br>
 Compressed same data using default compression in 309s <br>
-Decompressed 66 zip files in 99s
+Decompressed 66 zip files to 6.7GB in 99s
