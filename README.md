@@ -1,6 +1,6 @@
 # FileZip
 
-This program 
+This program performs compression and extraction while also allowing user to specify maximum size of each compressed file
 
 ### Problem Statement
 
@@ -34,3 +34,35 @@ single directory.
 
 Write your production-quality code in Java or Scala. Please test your system adhering to best
 practices. Submit your solution by using the link that was included in the email.
+
+### Usage
+For compression : <br>
+``` compress inputDirectory outputDirectory maxFileSizeInMB ``` <br>
+Example : <br>
+``` compress src/test/resources/testData src/test/resources/compressedTestDir/ 5.0 ```
+
+For extraction : <br>
+``` extract inputDirectory outputDirectory ``` <br>
+Example : <br>
+``` extract src/test/resources/compressedTestDir/ src/test/resources/extractedTestDir/ ```
+
+### Implementation details
+
+For compressing a directory, this program iterates through all the files and sequentially reads the data, compresses it and writes to the output zip file. It uses a CountingOutputStream to maintain the number of bytes written to the stream. Whenever the size threshold limit is reached, a new zip file is created and written to.
+
+Decompression works similarly, all zipped files are read sequentially in order of when they were created and decompressed file is written to the filesystem. For cases when multiple zip files contain parts of a single file, a mapping of each file's outputstream is maintainted to continue writing to the file's outputstream.
+
+This program works for files which are larger than the available JVM memory as the entire file is never loaded to memory. Also, the absolute minimum number of compressed files are generated using this program.
+
+Note : While runnning the Junit tests, additional files will be created in ```src/test/resources/``` folder to compare extracted files with original files.
+
+
+### Benchmarks 
+
+Compressed test data(65.6 MB media files) containing 17 files with maxSplitSize of 5 MB in 2.6s to 13 zip files <br>
+Compressed same data using default compression in 2.3s <br>
+Decompressed 13 zip files to 65.6 MB of data containing 17 files in 0.5s <br>
+
+Compressed 6.7GB containing 1889 files with maxSplitSize of 100MB in 324s <br>
+Compressed same data using default compression in 309s <br>
+Decompressed 66 zip files to 6.7GB in 99s
