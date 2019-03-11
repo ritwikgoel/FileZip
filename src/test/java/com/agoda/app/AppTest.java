@@ -21,8 +21,12 @@ public class AppTest {
 		String outDir = "src/test/resources/compressedTestDir/";
 		String extractedDir = "src/test/resources/extractedTestDir/";
 		long maxSize = FileUtils.MBtobytes(5.0);
-		org.apache.commons.io.FileUtils.cleanDirectory(new File(outDir));
-		org.apache.commons.io.FileUtils.cleanDirectory(new File(extractedDir));
+		File outFile = new File(outDir);
+		File extractedFile = new File(extractedDir);
+		if(!outFile.exists())outFile.mkdir();
+		if(!extractedFile.exists())extractedFile.mkdir();
+		org.apache.commons.io.FileUtils.cleanDirectory(outFile);
+		org.apache.commons.io.FileUtils.cleanDirectory(extractedFile);
 		Zip zip = new Zip();
 
 		zip.compress(inputDir, outDir, maxSize);
