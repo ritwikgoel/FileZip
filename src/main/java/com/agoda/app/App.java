@@ -16,7 +16,7 @@ public class App {
 		input=io.nextInt();
 		if (input==0) {
 			String inputDir = "/Users/ritwikgoel/Desktop/hello.txt";
-			String outputDir = "/Users/ritwikgoel/Desktop/";
+			String outputDir = ".";
 			long fileSize = FileUtils.MBtobytes(Double.parseDouble("100"));
 
 			// Currently using only ZIP compression
@@ -37,8 +37,8 @@ public class App {
 					break;
 			}
 		} else if (input==1) {
-			String inputDir = "/Users/ritwikgoel/Desktop/dir";
-			String outputDir = "/Users/ritwikgoel/Desktop";
+			String inputDir = ".";
+			String outputDir = "/output";
 
 			// Currently using only ZIP extraction
 			CompressionAlgo extractionAlgorithm = CompressionAlgo.ZIP;

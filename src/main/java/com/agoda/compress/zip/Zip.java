@@ -67,6 +67,7 @@ public class Zip implements Compressable {
 		// for multiple parts of the same file
 		HashMap<String, FileOutputStream> fosMap = new HashMap<>();
 		FileUtils.createDirIfNotExist(outputDir);
+		//System.out.println("directory created");
 
 		for (File zipFile : zipFiles) {
 			try {
@@ -78,10 +79,13 @@ public class Zip implements Compressable {
 					File originalFile = new File(outputDir + zipEntry.getName());
 					if (zipEntry.isDirectory()) {
 						originalFile.mkdir();
+
 					} else {
+
 						// Create parent folders
 						originalFile.getParentFile().mkdirs();
 						originalFile.createNewFile();
+						//issue here in createNewFIle
 						// Check if zipEntry is part of a partially written file
 						if (fosMap.containsKey(zipEntry.getName())) {
 							fos = fosMap.get(zipEntry.getName());
@@ -97,6 +101,7 @@ public class Zip implements Compressable {
 						}
 					}
 				}
+
 				zipIn.close();
 			} catch (IOException e) {
 				e.printStackTrace();
