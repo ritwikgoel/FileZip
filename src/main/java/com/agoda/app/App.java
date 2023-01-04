@@ -10,10 +10,9 @@ import com.agoda.utils.FileUtils;
 
 public class App {
 	public static void main(String[] args) throws IOException {
-		validateInput(args);
 		if (args[0].equalsIgnoreCase(Commands.COMPRESS.name())) {
-			String inputDir = args[1];
-			String outputDir = args[2];
+			String inputDir = "/Users/ritwikgoel/Desktop/input.txt";
+			String outputDir = "/Users/ritwikgoel/Desktop/";
 			long fileSize = FileUtils.MBtobytes(Double.parseDouble(args[3]));
 
 			// Currently using only ZIP compression
@@ -57,35 +56,4 @@ public class App {
 
 	}
 
-	private static void validateInput(String args[]) {
-		if (args.length < 3) {
-			throw new InvalidCommandException("Incorrect number of arguments provided");
-		}
-
-		if (args[0].equalsIgnoreCase(Commands.COMPRESS.name())) {
-			if (args.length != 4) {
-				throw new InvalidCommandException("Incorrect number of arguments");
-			}
-			if (!FileUtils.validateDirectory(args[1])) {
-				throw new InvalidCommandException("Input directory is invalid");
-			}
-			if (!FileUtils.validateDirectory(args[2])) {
-				throw new InvalidCommandException("Output directory is invalid");
-			}
-
-		} else if (args[0].equalsIgnoreCase(Commands.EXTRACT.name())) {
-			if (args.length != 3) {
-				throw new InvalidCommandException("Incorrect number of arguments");
-			}
-			if (!FileUtils.validateDirectory(args[1])) {
-				throw new InvalidCommandException("Input directory is invalid");
-			}
-			if (!FileUtils.validateDirectory(args[2])) {
-				throw new InvalidCommandException("Output directory is invalid");
-			}
-
-		} else {
-			throw new InvalidCommandException("This command is not supported");
-		}
-	}
 }
